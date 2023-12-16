@@ -20,7 +20,7 @@ function createWindow(panelConfig) {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'panel/preload.js')
     },
     width: panelConfig.resolution.w, // window width
     height: panelConfig.resolution.h, // window height
