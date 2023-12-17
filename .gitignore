@@ -1,3 +1,8 @@
 **/node_modules/**
 **/dist/**
 **/electrb*.tgz**
+**/electrb*.tar.zst**
+**/electrb*.pacman**
+pkg/**
+src/**
+
