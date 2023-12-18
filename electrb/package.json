@@ -24,6 +24,10 @@
       "output": "dist"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrt0rtikize/electrb.git"
+  },
   "keywords": [],
   "homepage": "https://github.com/mrt0rtikize/electrb",
   "author": {
