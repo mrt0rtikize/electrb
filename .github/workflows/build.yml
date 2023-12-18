@@ -22,18 +22,6 @@ jobs:
       with:
         node-version: '21'
 
-    - name: Determine pre-release status and release name
-      id: prep
-      run: |
-        BRANCH_NAME=${GITHUB_REF#refs/heads/}
-        if [ "$BRANCH_NAME" = "master" ]; then
-          echo "RELEASE_NAME=v${{ github.event.repository_vesion }}" >> $GITHUB_ENV
-          echo "PRE_RELEASE=false" >> $GITHUB_ENV
-        else
-          echo "RELEASE_NAME=v${{ github.event.repository_vesion }}-$BRANCH_NAME" >> $GITHUB_ENV
-          echo "PRE_RELEASE=true" >> $GITHUB_ENV
-        fi
-
     - name: Install dependencies
       run: |
         cd electrb
@@ -42,23 +30,5 @@ jobs:
     - name: Build and package
       run: |
         cd electrb
-        npm run dist --publish never
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ env.RELEASE_NAME }}
-        draft: true
-        prerelease: ${{ env.PRE_RELEASE }}
-    
-    - name: Upload pacman artifact
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: electrb/dist/electrb-${{ github.ref.name }}.pacman
-        asset_name: electrb-${{ github.ref_name }}.pacman
+        npm run dist
 
