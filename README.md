@@ -5,8 +5,8 @@ Yet another electron-based bar for unix systems - hello r/unixporn, thanks for c
 ### Why I've made it
 There are a lot of great bars - personally I used to use polybar most of the time. But then you see something like eww - and you want more or its beauty
 
-You try eww - and it's fcking nightmare. You want these nice widgets, and you're comfortable with fact that you need to spend several days trying to configure it. I've spent some time - and it was one of the biggest disappointes of my life - thanks to castrated gtk-css you cannot made something like this:
-TODO: Cybercpu panel img here
+You try eww - and it's fcking nightmare. You want these nice widgets, and you're comfortable with fact that you need to spend several days trying to configure it. I've spent some time - and it was one of the biggest disappointes of my life - thanks to castrated gtk-css you cannot made something like this:  
+![no picture? what a shame](https://i.imgur.com/BYNruSR.png "cybercpu widget")
 
 So it is my try to make electron-based bar, that will be:
 - hard to configure

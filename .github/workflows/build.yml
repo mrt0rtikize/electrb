@@ -1,0 +1,34 @@
+name: CI Workflow
+
+on: 
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install bsdtar for pacman package creation
+      run: sudo apt-get update && sudo apt-get install libarchive-tools -y
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '21'
+
+    - name: Install dependencies
+      run: |
+        cd electrb
+        npm install
+
+    - name: Build and package
+      run: |
+        cd electrb
+        npm run dist
+

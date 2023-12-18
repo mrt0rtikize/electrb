@@ -1,17 +1,44 @@
 {
   "name": "electrb",
-  "version": "0.1.0",
+  "version": "0.1.8",
   "description": "",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "tech.t0rt1k.electrb",
+    "linux": {
+      "maintainer": "mrt0rtikize <ya@t0rt1k.tech>",
+      "target": [
+        "AppImage",
+        "tar.gz",
+        "pacman"
+      ],
+      "category": "Utility"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrt0rtikize/electrb.git"
   },
   "keywords": [],
-  "author": "",
+  "homepage": "https://github.com/mrt0rtikize/electrb",
+  "author": {
+    "name": "mrt0rtikize",
+    "email": "ya@t0rt1k.tech"
+  },
   "license": "ISC",
   "devDependencies": {
-    "electron": "^28.0.0"
+    "js-yaml": "^4.1.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"
