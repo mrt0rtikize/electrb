@@ -1,0 +1,55 @@
+name: CI Workflow
+
+on: 
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: |
+        cd electrb
+        npm install
+
+    - name: Build and package
+      run: npm run dist
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: electrb-build-${{ github.ref_name }}
+        path: |
+          electrb/dist/electrb-${{ github.ref_name }}*
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ steps.branch_name.outputs.formatted_branch_name }}
+        draft: false
+        prerelease: false
+
+    - name: Determine branch name
+      id: branch_name
+      run: |
+        BRANCH_NAME="$(git branch -r --contains tags/${{ github.ref_name }} | grep -v ' -> ' | sed -e 's/origin\///' -e 's/^[ \t]*//')"
+        if [ "$BRANCH_NAME" == "master" ]; then
+          echo "::set-output name=formatted_branch_name::v${{ github.ref_name }}"
+        else
+          echo "::set-output name=formatted_branch_name::v${{ github.ref_name }}-$BRANCH_NAME"
+        fi
+
