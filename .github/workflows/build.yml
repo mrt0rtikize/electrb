@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install bsdtar for pacman package creation
-      run: sudo apt-get update && sudo apt-get install bsdtar -y
+      run: sudo apt-get update && sudo apt-get install libarchive-tools -y
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
