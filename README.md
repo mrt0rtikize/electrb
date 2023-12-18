@@ -105,7 +105,7 @@ schedulers:
 ```
 
 # TODO
-- [ ] make possible to set float as interval
+- [x] make possible to set float as interval
 - [ ] test layouts with several widgets and fix what is wrong
 - [ ] make a default config, create dirs and etc on first run
 - [ ] create a set of default widgets

@@ -121,11 +121,10 @@ function execBash(scheduler) {
 
 // function parseInterval parses the interval string and returns the number of milliseconds
 function parseInterval(interval) {
-  // TODO: handle float inetrvals, not only integers
-  const match = interval.match(/(\d+)([smh])/);
+  const match = interval.match(/(\d+(?:\.\d+)?)([smh])/);
   if (!match) return null;
 
-  const value = parseInt(match[1], 10);
+  const value = parseFloat(match[1]);
   const unit = match[2];
 
   switch (unit) {
