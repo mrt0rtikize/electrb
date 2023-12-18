@@ -22,6 +22,18 @@ jobs:
       with:
         node-version: '21'
 
+    - name: Determine pre-release status and release name
+      id: prep
+      run: |
+        BRANCH_NAME=${GITHUB_REF#refs/heads/}
+        if [ "$BRANCH_NAME" = "master" ]; then
+          echo "RELEASE_NAME=v${{ github.event.repository_vesion }}" >> $GITHUB_ENV
+          echo "PRE_RELEASE=false" >> $GITHUB_ENV
+        else
+          echo "RELEASE_NAME=v${{ github.event.repository_vesion }}-$BRANCH_NAME" >> $GITHUB_ENV
+          echo "PRE_RELEASE=true" >> $GITHUB_ENV
+        fi
+
     - name: Install dependencies
       run: |
         cd electrb
