@@ -42,14 +42,7 @@ jobs:
     - name: Build and package
       run: |
         cd electrb
-        npm run dist
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: electrb-build-${{ github.ref_name }}
-        path: |
-          electrb/dist/electrb-${{ github.ref_name }}*
+        npm run dist --publish never
 
     - name: Create Release
       id: create_release
@@ -59,5 +52,13 @@ jobs:
       with:
         tag_name: ${{ github.ref }}
         release_name: ${{ env.RELEASE_NAME }}
-        draft: false
+        draft: true
         prerelease: ${{ env.PRE_RELEASE }}
+    
+    - name: Upload pacman artifact
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: electrb/dist/electrb-${{ github.ref.name }}.pacman
+        asset_name: electrb-${{ github.ref_name }}.pacman
+
