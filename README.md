@@ -110,4 +110,5 @@ schedulers:
 - [ ] make a default config, create dirs and etc on first run
 - [ ] create a set of default widgets
 - [ ] add examples
+- [ ] add IPC signals from panels to main process (can be used for things like launching scripts and things like changing workspaces in WM)
 
