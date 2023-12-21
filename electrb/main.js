@@ -4,6 +4,7 @@ const os = require('os');
 const yaml = require('js-yaml');
 const fs = require('fs');
 const { execSync } = require('child_process');
+const IPC = require('./ipc');
 
 
 app.setPath('cache', path.join(os.tmpdir(), 'electrb-cache'));
@@ -77,12 +78,63 @@ function createPanels() {
 // function startSchedulers creates and starts the schedulers for each object in config.schedulers
 function startSchedulers() {
   config.schedulers.forEach(scheduler => {
+    // shell scheduler
     if (scheduler.type === 'shell') {
       runShellScheduler(scheduler);
       const intervalMs = parseInterval(scheduler.interval);
       setInterval(() => {
         runShellScheduler(scheduler);
       }, intervalMs);
+    // internal schedulers
+    } else if (scheduler.type.startsWith("internal")) {
+      // i3wm
+      if (scheduler.type === 'internal/i3wm') {
+        // declare func to create i3-ipc message
+        const createI3Message = function (type, payload = '') {
+          const payloadBuffer = Buffer.from(payload);
+          const buffer = Buffer.alloc(14 + payloadBuffer.length);
+          buffer.write('i3-ipc');
+          buffer.writeInt32LE(payloadBuffer.length, 6);
+          buffer.writeInt32LE(type, 10);
+          payloadBuffer.copy(buffer, 14);
+          return buffer;
+        }
+        // import i3-ipc message parser
+        const i3parser = require('./builtin/parsers/i3wm_message');
+        // declare config onject for IPC class
+        const i3Config = {
+          socketPath: process.env.I3SOCK,
+          messageParser: i3parser, // Your function to parse i3 messages
+          subscribeMessage: createI3Message(2, JSON.stringify(['workspace'])),
+        };
+        // craete i3ipc object
+        const i3ipc = new IPC(i3Config);
+        // subscribe to workspace events
+        i3ipc.on('event', (eventData) => {
+          // TODO: need to filter events and avoid unnecessary operations with data
+          if (eventData.type !== 1) {
+            // event.type = 1 - list workspaces, this if is to avoid endless recursion
+            i3ipc.sendMessage(createI3Message(1));
+          } else {
+            // for every event what is not type = 1 - get workspaces list and send it to global.schedulers_results
+            if (global.schedulers_results[scheduler.var] !== eventData.payload) {
+              global.schedulers_results[scheduler.var] = eventData.payload;
+              BrowserWindow.getAllWindows().forEach(window => {
+                window.webContents.send('schedulers_results', global.schedulers_results);
+              });
+              console.debug("Got new workspaces list");
+            }
+          }
+        });
+        // handle errors
+        i3ipc.on('error', (error) => {
+            console.error('Error:', error);
+        });
+      } else {
+        console.error(`Internal scheduler type ${scheduler.type} not supported`);
+      }
+    } else {
+      console.error(`Scheduler type ${scheduler.type} not supported`);
     }
   });
 }
