@@ -117,8 +117,20 @@ function startSchedulers() {
             i3ipc.sendMessage(createI3Message(1));
           } else {
             // for every event what is not type = 1 - get workspaces list and send it to global.schedulers_results
-            if (global.schedulers_results[scheduler.var] !== eventData.payload) {
-              global.schedulers_results[scheduler.var] = eventData.payload;
+            // TODO: need to move this shit from main to somewhere else
+            var wmWorkspaces = []
+            for (var i = 0; i < eventData.payload.length; i++) {
+              wmWorkspaces.push(
+                {
+                  id: eventData.payload[i].num,
+                  name: eventData.payload[i].name,
+                  focused: eventData.payload[i].focused,
+                  urgent: eventData.payload[i].urgent
+                }
+              );
+            }
+            if (global.schedulers_results[scheduler.var] !== wmWorkspaces) {
+              global.schedulers_results[scheduler.var] = wmWorkspaces;
               BrowserWindow.getAllWindows().forEach(window => {
                 window.webContents.send('schedulers_results', global.schedulers_results);
               });
