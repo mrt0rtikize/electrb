@@ -57,6 +57,7 @@ Here is a sample config file with some comments:
 ```yaml
 panels:
   - name: "main" # name of panel
+    layout: horizontal # can be horizontal or vertical
     resolution:
       w: 311
       h: 65
@@ -69,6 +70,7 @@ panels:
       - name: "cybercpu"
         # you can add more widgets here
   - name: "panel_debug" # debug shows chromium dev tools
+    layout: vertical
     resolution: # as it is my debug panel - i made it large, so dev tools can feat
       w: 1000
       h: 800

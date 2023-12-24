@@ -6,3 +6,9 @@
     padding: 0;
     box-sizing: border-box; /* This ensures padding doesn't affect the total width/height */
 }
+
+.main-container.horizontal {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}

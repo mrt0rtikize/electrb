@@ -1,10 +1,12 @@
-// window.electronAPI.receive('schedulers_results', (schedulersResults) => {
-//   console.log('Received schedulers results:', schedulersResults);
-//   document.getElementById('cpuStatDisplay').textContent = schedulersResults.cpu_stat.average_usage;
-// });
-
+window.electronAPI.receive('set_layout', (layout) => {
+  const mainContainer = document.createElement('div');
+  mainContainer.id ='main-container';
+  mainContainer.className = `main-container ${layout}`;
+  document.body.appendChild(mainContainer);
+});
 
 window.electronAPI.receive('init_widgets', (widgets) => {
+  // FIXME: check if main-container exists, if not - wait a little and try again
   console.log(widgets);
   widgets.forEach((widget) => {
     console.log(`modifying html for widget ${widget.name}`);
@@ -12,7 +14,6 @@ window.electronAPI.receive('init_widgets', (widgets) => {
     const div = document.createElement('div');
     div.id = widget.name;
     div.className = "widget";
-    document.body.appendChild(div);
 
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -23,5 +24,7 @@ window.electronAPI.receive('init_widgets', (widgets) => {
     script.src = `${widget.path}/index.js`;
     document.body.appendChild(script);
 
+    const mainContainer = document.getElementById('main-container');
+    mainContainer.appendChild(div);
   })
 });

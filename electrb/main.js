@@ -48,6 +48,7 @@ function createWindow(panelConfig) {
   global.panels[panelConfig.name].setTitle(panelConfig.name);
 
   global.panels[panelConfig.name].webContents.on('did-finish-load', () => {
+    global.panels[panelConfig.name].webContents.send('set_layout', panelConfig.layout);
     panelConfig.widgets.forEach(widget => {
       widget.path = `${os.homedir()}/.config/electrb/widgets/${widget.name}`;
     })
